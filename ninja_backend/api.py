@@ -1,8 +1,8 @@
 from ninja_extra import NinjaExtraAPI
 
 api = NinjaExtraAPI(
-    title="Book Store API",
-    description="Book Store API for renting books and notifying available/returned books in a store",
-    urls_namespace="store",
+    title="grad project",
+    description="還不快做事",
+    urls_namespace="api",
 )
 api.auto_discover_controllers()
