@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'ninja',
     'ninja_extra',
     'ninja_backend.apps.users',
+    'ninja_backend.apps.yolo'
 ]
 
 MIDDLEWARE = [
@@ -122,6 +123,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
