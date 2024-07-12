@@ -7,9 +7,13 @@ from ninja_jwt.authentication import JWTAuth
 from ultralytics import YOLO
 from ninja_backend.apps.yolo.models import Image
 import os
-import cv2
+import datetime
+
+date = datetime.datetime.now().date()
+time = datetime.datetime.now().time()
 
 User = get_user_model()
+
 
 @api_controller("/yolo", tags=["yolo"], auth=JWTAuth())
 class ImageController:
@@ -17,7 +21,10 @@ class ImageController:
     def upload_image(self, request, file: UploadedFile = File(...)):
         user = get_object_or_404(User, id=request.user.id)
         # Save the uploaded file to the desired location
-        image_path = os.path.join('media', 'images', file.name)
+        image_path = os.path.join('media', 'images', f'{request.user.id}', f'{date}', f'{time.strftime("%H-%M-%S")}',
+                                  file.name)
+        os.makedirs(os.path.dirname(image_path), exist_ok=True)
+
         with open(image_path, 'wb+') as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
@@ -29,15 +36,23 @@ class ImageController:
         model = YOLO('yolov8s.pt')
         results = model(image_path)
 
+        # Extract the number of detected objects and their class names
+        detected_objects = results[0].names
+        num_detected_objects = len(results[0].boxes)
+        class_names = [model.names[int(box.cls)] for box in results[0].boxes]
+
         # Save the prediction result image
-        output_dir = os.path.join('media', 'yolo_out')
-        os.makedirs(output_dir, exist_ok=True)
-        output_image_path = os.path.join(output_dir, f"pred_{file.name}")
-        results[0].save(output_image_path)
+        output_dir = os.path.join('media', 'yolo_out', f'{request.user.id}', f'{date}', f'{time.strftime("%H-%M-%S")}',
+                                  f"pred_{file.name}")
+        os.makedirs(os.path.dirname(output_dir), exist_ok=True)
+
+        results[0].save(output_dir)
 
         return {
             "filename": file.name,
             "url": f"/media/images/{file.name}",
             "prediction_url": f"/media/yolo_out/pred_{file.name}",
-            "user_id": request.user.id
+            "user_id": request.user.id,
+            "num_detected_objects": num_detected_objects,
+            "class_names": class_names
         }
