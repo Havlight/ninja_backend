@@ -50,8 +50,8 @@ class ImageController:
 
         return {
             "filename": file.name,
-            "url": f"/media/images/{file.name}",
-            "prediction_url": f"/media/yolo_out/pred_{file.name}",
+            "url": image_path,
+            "prediction_url": output_dir,
             "user_id": request.user.id,
             "num_detected_objects": num_detected_objects,
             "class_names": class_names
