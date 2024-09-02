@@ -43,13 +43,10 @@ class UserController:
         # 创建用户
         user = user_schema.create()
         token = SlidingToken.for_user(user)
-
         # 获取用户的邮箱
         user_email = user.email
-
         # 调用发送邮件的函数
         self.send_email(user_email, subject, message)
-
         # 返回用户和 token 信息
         return UserTokenOutSchema(
             user=user,
