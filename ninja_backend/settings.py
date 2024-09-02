@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'ninja',
     'ninja_extra',
     'ninja_backend.apps.users',
-    'ninja_backend.apps.yolo'
+    'ninja_backend.apps.yolo',
+    "verify_email.apps.VerifyEmailConfig",
 ]
 
 MIDDLEWARE = [
@@ -126,7 +127,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  #SMTP伺服器
+EMAIL_PORT = 587  #TLS通訊埠號
+EMAIL_USE_TLS = True  #開啟TLS(傳輸層安全性)
+EMAIL_HOST_USER = 'nick910726lee@gmail.com'  #寄件者電子郵件
+EMAIL_HOST_PASSWORD = 'khbr czkh tdcl cewf'  #Gmail應用程式的密碼
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

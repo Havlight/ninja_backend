@@ -7,9 +7,8 @@ from ninja_extra import status
 from ninja_extra.exceptions import APIException
 from ninja_schema import ModelSchema, Schema, model_validator
 from pydantic import validator
-
+from ninja import Field
 UserModel = get_user_model()
-
 
 class GroupSchema(ModelSchema):
     class Config:
@@ -27,10 +26,11 @@ class CreateUserSchema(ModelSchema):
             "username",
             "is_staff",
             "is_superuser",
+            "is_active",
             "password",
         )
 
-    @model_validator("username")
+    @model_validator("username")#在輸入重複名字時會產生錯誤 statuscode在comtroller無法被接收 台灣人應該會有重複的名字可能要想其他方法來做驗證
     def unique_name(cls, value_data):
         if UserModel.objects.filter(username__icontains=value_data).exists():
             raise APIException(
@@ -91,3 +91,6 @@ class EnableDisableUserSchema(Schema):
 
 class EnableDisableUserOutSchema(Schema):
     message: str
+
+class UserOutSchema(Schema):
+    user: UserRetrieveSchema
