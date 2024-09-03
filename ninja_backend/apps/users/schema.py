@@ -30,7 +30,7 @@ class CreateUserSchema(ModelSchema):
             "password",
         )
 
-    @model_validator("username")#在輸入重複名字時會產生錯誤 statuscode在comtroller無法被接收 台灣人應該會有重複的名字可能要想其他方法來做驗證
+    @model_validator("username")
     def unique_name(cls, value_data):
         if UserModel.objects.filter(username__icontains=value_data).exists():
             raise APIException(

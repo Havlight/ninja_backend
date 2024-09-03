@@ -46,7 +46,7 @@ class UserController:
         # 获取用户的邮箱
         user_email = user.email
         # 调用发送邮件的函数
-        self.send_email(user_email, subject, message)
+        # self.send_email(user_email, subject, message)
         # 返回用户和 token 信息
         return UserTokenOutSchema(
             user=user,
